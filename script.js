@@ -38,14 +38,17 @@ const renderSinglePartyById = async (id) => {
   try {
     // fetch party details from server
     const party = await getPartyById(id);
+    console.log("party", party)
 
     // GET - /api/workshop/guests/party/:partyId - get guests by party id
     const guestsResponse = await fetch(`${GUESTS_API_URL}/party/${id}`);
     const guests = await guestsResponse.json();
+    console.log("guests", guestsResponse);
 
     // GET - /api/workshop/rsvps/party/:partyId - get RSVPs by partyId
     const rsvpsResponse = await fetch(`${RSVPS_API_URL}/party/${id}`);
     const rsvps = await rsvpsResponse.json();
+    console.log("rvsp",rsvpsResponse);
 
     // GET - get all gifts by party id - /api/workshop/parties/gifts/:partyId -BUGGY?
     // const giftsResponse = await fetch(`${PARTIES_API_URL}/party/gifts/${id}`);
@@ -55,11 +58,11 @@ const renderSinglePartyById = async (id) => {
     const partyDetailsElement = document.createElement('div');
     partyDetailsElement.classList.add('party-details');
     partyDetailsElement.innerHTML = `
-            <h2>${party.title}</h2>
-            <p>${party.event}</p>
-            <p>${party.city}</p>
-            <p>${party.state}</p>
-            <p>${party.country}</p>
+            <h2>${party.name}</h2>
+            <p>${party.description}</p>
+            <p>${party.location}</p>
+            <p>${party.date}</p>
+            <p>${party.time}</p>
             <h3>Guests:</h3>
             <ul>
             ${guests
@@ -77,6 +80,7 @@ const renderSinglePartyById = async (id) => {
             <button class="close-button">Close</button>
         `;
     partyContainer.appendChild(partyDetailsElement);
+    console.log("details",partyDetailsElement)
 
     // add event listener to close button
     const closeButton = partyDetailsElement.querySelector('.close-button');
@@ -101,7 +105,7 @@ const renderParties = async (parties) => {
                 <p>${party.date}</p>
                 <p>${party.time}</p>
                 <p>${party.location}</p>
-                <button class="details-button" data-id="${party.id}">See Details</button>
+                <button class="details-button" id="${party.id}">See Details</button>
                 <button class="delete-button" data-id="${party.id}">Delete</button>
             `;
       partyContainer.appendChild(partyElement);
@@ -110,6 +114,11 @@ const renderParties = async (parties) => {
       const detailsButton = partyElement.querySelector('.details-button');
       detailsButton.addEventListener('click', async (event) => {
         // your code here
+
+        const partyId = event.target.id;
+        
+        await renderSinglePartyById(partyId);
+
       });
 
       // delete party
