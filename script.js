@@ -31,6 +31,22 @@ const getPartyById = async (id) => {
 // delete party
 const deleteParty = async (id) => {
   // your code here
+
+  try {
+    const response = await fetch(`${PARTIES_API_URL}/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-type' : 'application/json'
+      }
+    }).then(response => {
+      if(response.ok) {
+        return response.json()
+      }
+    })
+   
+  } catch(error) {
+
+  }
 };
 
 // render a single party by id
@@ -93,7 +109,7 @@ const renderSinglePartyById = async (id) => {
 };
 
 // render all parties
-const renderParties = async (parties) => {
+const renderParties = async (parties) => {``
   try {
     partyContainer.innerHTML = '';
     parties.forEach((party) => {
@@ -106,7 +122,7 @@ const renderParties = async (parties) => {
                 <p>${party.time}</p>
                 <p>${party.location}</p>
                 <button class="details-button" id="${party.id}">See Details</button>
-                <button class="delete-button" data-id="${party.id}">Delete</button>
+                <button class="delete-button" id="${party.id}">Delete</button>
             `;
       partyContainer.appendChild(partyElement);
 
@@ -125,6 +141,10 @@ const renderParties = async (parties) => {
       const deleteButton = partyElement.querySelector('.delete-button');
       deleteButton.addEventListener('click', async (event) => {
         // your code here
+          await fetch(`PARTIES_API_URL/party/${event.target.id}`,{
+            method: 'DELETE'
+          });
+          Element.innerHTML = 'Delete succesful';
       });
     });
   } catch (error) {
